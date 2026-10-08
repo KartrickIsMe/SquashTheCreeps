@@ -1,0 +1,62 @@
+[gd_scene format=3 uid="uid://bod3fj7yhpsim"]
+
+[ext_resource type="Script" uid="uid://7sj134im4ift" path="res://main.gd" id="1_h2yge"]
+[ext_resource type="PackedScene" uid="uid://sri2u4ur0bj8" path="res://player.tscn" id="1_ig7tw"]
+[ext_resource type="PackedScene" uid="uid://d4gdh77f3g68c" path="res://mob.tscn" id="2_1bvp3"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_3jg8h"]
+size = Vector3(60, 2, 60)
+
+[sub_resource type="BoxMesh" id="BoxMesh_3jg8h"]
+size = Vector3(60, 2, 60)
+
+[sub_resource type="Curve3D" id="Curve3D_lquwl"]
+closed = true
+_data = {
+"points": PackedVector3Array(0, 0, 0, 0, 0, 0, -21.319876, 1.9073486e-06, -17.249039, 0, 0, 0, 0, 0, 0, 19.256458, 0, -17.547623, 0, 0, 0, 0, 0, 0, 20.643997, 0, 16.74874, 0, 0, 0, 0, 0, 0, -21.31719, 0, 17.088821),
+"tilts": PackedFloat32Array(0, 0, 0, 0)
+}
+point_count = 4
+
+[node name="Main" type="Node" unique_id=641336787]
+script = ExtResource("1_h2yge")
+mob_scene = ExtResource("2_1bvp3")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=899971246]
+transform = Transform3D(-0.8660254, -0.43301278, 0.25, 0, 0.49999997, 0.86602545, -0.50000006, 0.75, -0.43301266, 0, 8, 0)
+
+[node name="Ground" type="StaticBody3D" parent="." unique_id=402694110]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0)
+collision_layer = 4
+collision_mask = 0
+metadata/_edit_group_ = true
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Ground" unique_id=552523662]
+shape = SubResource("BoxShape3D_3jg8h")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Ground" unique_id=2050281286]
+mesh = SubResource("BoxMesh_3jg8h")
+
+[node name="Player" parent="." unique_id=318575746 instance=ExtResource("1_ig7tw")]
+collision_mask = 6
+
+[node name="CameraPivot" type="Marker3D" parent="." unique_id=8924873]
+transform = Transform3D(1, 0, 0, 0, 0.70710677, 0.70710677, 0, -0.70710677, 0.70710677, 0, 0, 0)
+
+[node name="Camera3D" type="Camera3D" parent="CameraPivot" unique_id=142744604]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 19)
+projection = 1
+size = 19.0
+far = 100.0
+
+[node name="SpawnPath" type="Path3D" parent="." unique_id=1297643140]
+curve = SubResource("Curve3D_lquwl")
+
+[node name="SpawnLocation" type="PathFollow3D" parent="SpawnPath" unique_id=2095931851]
+transform = Transform3D(0.0073584267, 4.7003887e-08, -0.999971, -1.7763533e-15, 1, 4.7005067e-08, 0.999971, -3.458829e-10, 0.0073584267, -21.319876, 1.9073486e-06, -17.249039)
+
+[node name="MobTimer" type="Timer" parent="." unique_id=1323970188]
+wait_time = 0.5
+autostart = true
+
+[connection signal="timeout" from="MobTimer" to="." method="_on_mob_timer_timeout"]
